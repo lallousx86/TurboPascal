@@ -1,0 +1,24 @@
+(*              skeleton of tiny program loader                          *)
+procedure skulcom;external;{$l skul}
+procedure load;
+var
+   Sp:Pointer;
+Begin;
+Sp:=@SkulCom;
+Move(Sp^,Ptr($B800,0)^,4000);
+End;
+
+Begin;
+  asm
+      jmp @1
+      db 13,10
+      db 'ÍTailor .exe save fileÍ',13
+      db '  ®Elias Bachaalany¯',13
+      db '  ®Software(c)95,96¯',13
+      db 'ÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ',13
+      @1:
+  end;
+
+Load;
+
+End.

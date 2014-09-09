@@ -1,0 +1,49 @@
+(*              screen file to exe file                                  *)
+Procedure skulexe;External;{$l skul}
+Const skulexesize = 5824;
+Var
+  f1,f2:File;
+  Sk,Img:Pointer;
+Begin;
+  GetMem(Img,4000);
+  If ParamCount<2 Then Begin;
+    WriteLn('SCR2EXE v1.0 For Use With Tailor v1.0');
+    WriteLn(ParamStr(0),' [infile.scr] [outfile.exe]');
+    Halt(2);
+  End;
+
+    Assign(f1,ParamStr(1));
+    Assign(f2,ParamStr(2));
+    {$I-}
+    Reset(f1,1);
+    If IOResult <> 0 Then Begin;
+        WriteLn('Cannot open ',ParamStr(1));
+        Halt(0);
+    End;
+    Rewrite(f2,1);
+    If IOResult <> 0 Then Begin;
+        WriteLn('Cannot save ',ParamStr(2));
+        Halt(0);
+    End;
+    If FileSize(f1) < 4000 Then Begin;
+        WriteLn('error in ',ParamStr(1));
+    End;
+    {$I+}
+
+    Sk:=@skulexe;
+    BlockWrite(f2,Sk^,skulexesize);
+
+
+    BlockRead(f1,Img^,4000);
+
+    Seek(f2,$FA);
+
+    BlockWrite(f2,Img^,4000);
+    WriteLn('converted ',ParamStr(1),' --->',ParamStr(2));
+    Reset(f1);
+    Close(f1);
+    Close(f2);
+
+    FreeMem(Img,4000);
+
+End.
